@@ -1,5 +1,5 @@
 {
-  "Photos": [
+  "Images": [
     "jpg",
     "jpeg",
     "png",
@@ -32,12 +32,33 @@
     "pdf",
     "doc",
     "docx",
+    "docm",
+    "dot",
+    "dotx",
+    "pages",
+    "uof",
     "odt",
     "xls",
     "xlsx",
+    "xps",
     "ods",
     "ppt",
-    "pptx"
+    "pptx",
+    "odp",
+    "epub",
+    "gslides",
+    "key",
+    "keynote",
+    "pez",
+    "pot",
+    "pps",
+    "ppt",
+    "pptx",
+    "prz",
+    "sdd",
+    "show",
+    "sti",
+    "sxi"
   ],
   "Music": [
     "mp3",
