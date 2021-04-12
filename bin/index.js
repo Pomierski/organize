@@ -5,7 +5,7 @@ const fs = require("fs");
 const fse = require("fs-extra");
 const chalk = require("chalk");
 const pkg = require(path.join(__dirname, "../package.json"));
-const { Command } = require("commander");
+const { Command, option } = require("commander");
 const program = new Command();
 
 let fileExtensionsObj = require("./fileExtensions.json");
@@ -84,6 +84,12 @@ program.option(
     "organize -e 'webm'"
   )}`
 );
+program.option(
+  "-c, --custom [new category, file extension]",
+  `Organize files with extension which categories don't contain, e.g ${chalk.magentaBright.italic(
+    "organize -e 'Javascript, js'"
+  )}`
+);
 program.parse(process.argv);
 
 const options = program.opts();
@@ -130,6 +136,19 @@ if (options.extension) {
   if (extensionKey) {
     fileExtensionsObj = {
       [extensionKey]: [fileExtension],
+    };
+  } else {
+    displayParametrError();
+  }
+}
+
+if (options.custom) {
+  const params = options.custom.replace(/\s/g, "").split(",");
+  if (params.length == 2) {
+    const groupName = params[0];
+    const fileExtension = params[1];
+    fileExtensionsObj = {
+      [groupName]: fileExtension,
     };
   } else {
     displayParametrError();
