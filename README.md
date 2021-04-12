@@ -1,6 +1,7 @@
 # Organize - CLI for organizing files
 
 Organize moves files into created directories, which are named according to the purpose of the file.  
+
 ![enter image description here](https://i.imgur.com/K4ZSKAy.gif)
 
 ## How to use
