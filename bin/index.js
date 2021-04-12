@@ -68,19 +68,19 @@ program.version(pkg.version).description(
 
 program.option(
   "-i, --ignore [category or categories]",
-  `Ignore one or many categories, e.g ${chalk.magentaBright.italic(
+  `Ignore files from one or many categories, e.g ${chalk.magentaBright.italic(
     "organize -i 'videos'"
   )} or ${chalk.magentaBright.italic("organize -i 'videos, movies, music'")}`
 );
 program.option(
   "-o, --only [files group]",
-  `Organize only by one category, e.g ${chalk.magentaBright.italic(
+  `Organize by only one category, e.g ${chalk.magentaBright.italic(
     "organize -o 'videos'"
   )}`
 );
 program.option(
   "-e, --extension [file extension]",
-  `Organize files only with specified extension, e.g ${chalk.magentaBright.italic(
+  `Organize files with specified extension, e.g ${chalk.magentaBright.italic(
     "organize -e 'webm'"
   )}`
 );
