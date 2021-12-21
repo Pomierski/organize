@@ -1,35 +1,25 @@
 #!/usr/bin/env node
 
-const path = require("path");
 const fs = require("fs");
 const fse = require("fs-extra");
 const chalk = require("chalk");
-const pkg = require(path.join(__dirname, "../package.json"));
-const { Command, option } = require("commander");
-const program = new Command();
+const options = require("./options").opts();
+const config = require("./config/config.json");
+const { capitalize, getFileExtension } = require("./functions");
 
-let fileExtensionsObj = require("./fileExtensions.json");
+const { initialPath, prefix } = config;
 
-const initialPath = "./";
-const prefix = "\n[Organize]:";
+let fileExtensionsObj = config.fileExtensions;
 let error = false;
-
-const capitalize = (string) =>
-  string.slice(0, 1).toUpperCase() +
-  string.slice(1, string.length).toLowerCase();
+const filesGroup = Object.keys(fileExtensionsObj);
 
 const displayParametrError = () => {
   error = true;
   return console.log(
     chalk.red.bgBlack.bold(
-      "Error, check if you entered parametr value correctly"
-    )
+      "Error, check if you entered parametr value correctly",
+    ),
   );
-};
-
-const getFileExtension = (file) => {
-  let fileExtension = path.extname(file);
-  return fileExtension.slice(1, fileExtension.length);
 };
 
 const createDirByFileExtension = (file, fileExtension, counterFn) => {
@@ -42,68 +32,34 @@ const createDirByFileExtension = (file, fileExtension, counterFn) => {
         fse.moveSync(
           `${initialPath}/${file}`,
           `${initialPath}/${ext}/${file}`,
-          (err) => err
+          (err) => err,
         );
         counterFn();
         return console.log(
-          `${prefix} ${chalk.grey(`Moving ${file} into ${ext}/${file}`)}`
+          `${prefix} ${chalk.grey(`Moving ${file} into ${ext}/${file}`)}`,
         );
-      } else if (fs.existsSync(`${initialPath}/${ext}/${file}`)) {
+      } if (fs.existsSync(`${initialPath}/${ext}/${file}`)) {
         return console.log(
           `${prefix} ${chalk.red(
-            `${file} already exist in ${ext} directory, skipping...`
-          )}`
+            `${file} already exist in ${ext} directory, skipping...`,
+          )}`,
         );
       }
     }
+    return undefined;
   });
 };
 
-program.version(pkg.version).description(
-  `${chalk.green("Organize")} your files \n${chalk.magentaBright(
-    "[Categories]"
-  )}: ${Object.keys(fileExtensionsObj).join(", ")}
-    `
-);
-
-program.option(
-  "-i, --ignore [category or categories]",
-  `Ignore files from one or many categories, e.g ${chalk.magentaBright.italic(
-    "organize -i 'videos'"
-  )} or ${chalk.magentaBright.italic("organize -i 'videos, movies, music'")}`
-);
-program.option(
-  "-o, --only [files group]",
-  `Organize by only one category, e.g ${chalk.magentaBright.italic(
-    "organize -o 'videos'"
-  )}`
-);
-program.option(
-  "-e, --extension [file extension]",
-  `Organize files with specified extension, e.g ${chalk.magentaBright.italic(
-    "organize -e 'webm'"
-  )}`
-);
-program.option(
-  "-c, --custom [new category, file extension]",
-  `Organize files with extension which categories don't contain, e.g ${chalk.magentaBright.italic(
-    "organize -e 'Javascript, js'"
-  )}`
-);
-program.parse(process.argv);
-
-const options = program.opts();
-
 if (options.ignore) {
-  filesGroup = Object.keys(fileExtensionsObj);
   if (options.ignore.includes(" ")) {
-    itemsToIgnore = options.ignore.split(" ");
-    itemsToIgnore.forEach((item) => (item = capitalize(item)));
+    const itemsToIgnore = options.ignore
+      .split(" ")
+      .map((item) => capitalize(item));
     filesGroup.forEach((key) => {
       if (itemsToIgnore.includes(key)) delete fileExtensionsObj[key];
     });
   } else if (!options.ignore.includes(" ")) {
-    fileGroup = capitalize(options.ignore);
+    const fileGroup = capitalize(options.ignore);
     if (filesGroup.includes(fileGroup)) {
       delete fileExtensionsObj[fileGroup];
     }
@@ -113,7 +69,7 @@ if (options.ignore) {
 }
 
 if (options.only) {
-  fileGroup = capitalize(options.only);
+  const fileGroup = capitalize(options.only);
   if (fileGroup in fileExtensionsObj) {
     fileExtensionsObj = {
       [fileGroup]: fileExtensionsObj[fileGroup],
@@ -124,8 +80,7 @@ if (options.only) {
 }
 
 if (options.extension) {
-  fileExtension = options.extension.toLowerCase();
-  filesGroup = Object.keys(fileExtensionsObj);
+  const fileExtension = options.extension.toLowerCase();
   let extensionKey;
   filesGroup.forEach((key) => {
     if (fileExtensionsObj[key].includes(fileExtension)) {
@@ -144,7 +99,7 @@ if (options.extension) {
 
 if (options.custom) {
   const params = options.custom.replace(/\s/g, "").split(",");
-  if (params.length == 2) {
+  if (params.length === 2) {
     const groupName = params[0];
     const fileExtension = params[1];
     fileExtensionsObj = {
@@ -155,41 +110,39 @@ if (options.custom) {
   }
 }
 
-const organizeFiles = async () => {
-  console.log(`${prefix} ${chalk.yellowBright("Organizing files...")}`);
-  return new Promise((resolve, reject) => {
-    fs.readdir(initialPath, (err, files) => {
-      if (err) {
-        reject(`${chalk.red("Unable to scan directory: ")} ${err}`);
-      }
-      let filesProcessed = 0;
-      let filesMoved = 0;
-      const countFiles = () => {
-        filesMoved++;
-      };
-      files.forEach((file) => {
-        createDirByFileExtension(file, getFileExtension(file), countFiles);
-        filesProcessed++;
-        if (filesProcessed === files.length) {
-          if (filesMoved === 0) {
-            resolve(
-              `${prefix} ${chalk.yellowBright.bold(
-                `No files found to be organized\n`
-              )}`
-            );
-          } else if (filesMoved != 0) {
-            resolve(
-              `${prefix} ${chalk.green.bold(`Organized ${filesMoved} files\n`)}`
-            );
-          }
+const organizeFiles = () => {
+  fs.readdir(initialPath, (err, files) => {
+    if (err) {
+      return console.log(`${chalk.red("Unable to scan directory: ")} ${err}`);
+    }
+    let filesProcessed = 0;
+    let filesMoved = 0;
+    const countFiles = () => {
+      filesMoved += 1;
+    };
+    files.forEach((file) => {
+      createDirByFileExtension(file, getFileExtension(file), countFiles);
+      filesProcessed += 1;
+      if (filesProcessed === files.length) {
+        if (filesMoved === 0) {
+          return console.log(`${prefix} ${chalk.yellowBright.bold(
+            `No files found to be organized\n`,
+          )}`);
         }
-      });
+        if (filesMoved !== 0) {
+          return console.log(`${prefix} ${chalk.green.bold(
+            `Organized ${filesMoved} files\n`,
+          )}`);
+        }
+      }
+      return undefined;
     });
+    return undefined;
   });
 };
 
 const startProgram = async () => {
-  if (!error) await organizeFiles().then((res) => console.log(res));
+  if (!error) organizeFiles();
 };
 
 startProgram();
