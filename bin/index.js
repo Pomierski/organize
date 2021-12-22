@@ -2,53 +2,16 @@
 
 const fs = require("fs");
 const fse = require("fs-extra");
-const chalk = require("chalk");
+const { displayError, errorType } = require("./components/displayError");
+const { createMesssage, messageType } = require("./components/message");
 const options = require("./options").opts();
 const config = require("./config/config.json");
 const { capitalize, getFileExtension } = require("./functions");
 
-const { initialPath, prefix } = config;
+const { initialPath } = config;
+let { fileExtensions } = config;
 
-let fileExtensionsObj = config.fileExtensions;
-let error = false;
-const filesGroup = Object.keys(fileExtensionsObj);
-
-const displayParametrError = () => {
-  error = true;
-  return console.log(
-    chalk.red.bgBlack.bold(
-      "Error, check if you entered parametr value correctly",
-    ),
-  );
-};
-
-const createDirByFileExtension = (file, fileExtension, counterFn) => {
-  Object.keys(fileExtensionsObj).forEach((ext) => {
-    if (fileExtensionsObj[ext].includes(fileExtension.toLowerCase())) {
-      if (!fs.existsSync(`${initialPath}/${ext}`)) {
-        fs.mkdir(`${initialPath}/${ext}`, (err) => err);
-      }
-      if (!fs.existsSync(`${initialPath}/${ext}/${file}`)) {
-        fse.moveSync(
-          `${initialPath}/${file}`,
-          `${initialPath}/${ext}/${file}`,
-          (err) => err,
-        );
-        counterFn();
-        return console.log(
-          `${prefix} ${chalk.grey(`Moving ${file} into ${ext}/${file}`)}`,
-        );
-      } if (fs.existsSync(`${initialPath}/${ext}/${file}`)) {
-        return console.log(
-          `${prefix} ${chalk.red(
-            `${file} already exist in ${ext} directory, skipping...`,
-          )}`,
-        );
-      }
-    }
-    return undefined;
-  });
-};
+const filesGroup = Object.keys(fileExtensions);
 
 if (options.ignore) {
   if (options.ignore.includes(" ")) {
@@ -56,26 +19,26 @@ if (options.ignore) {
       .split(" ")
       .map((item) => capitalize(item));
     filesGroup.forEach((key) => {
-      if (itemsToIgnore.includes(key)) delete fileExtensionsObj[key];
+      if (itemsToIgnore.includes(key)) delete fileExtensions[key];
     });
   } else if (!options.ignore.includes(" ")) {
     const fileGroup = capitalize(options.ignore);
     if (filesGroup.includes(fileGroup)) {
-      delete fileExtensionsObj[fileGroup];
+      delete fileExtensions[fileGroup];
     }
   } else {
-    displayParametrError();
+    displayError(errorType.parametr);
   }
 }
 
 if (options.only) {
   const fileGroup = capitalize(options.only);
-  if (fileGroup in fileExtensionsObj) {
-    fileExtensionsObj = {
-      [fileGroup]: fileExtensionsObj[fileGroup],
+  if (fileGroup in fileExtensions) {
+    fileExtensions = {
+      [fileGroup]: fileExtensions[fileGroup],
     };
   } else {
-    displayParametrError();
+    displayError(errorType.parametr);
   }
 }
 
@@ -83,17 +46,17 @@ if (options.extension) {
   const fileExtension = options.extension.toLowerCase();
   let extensionKey;
   filesGroup.forEach((key) => {
-    if (fileExtensionsObj[key].includes(fileExtension)) {
+    if (fileExtensions[key].includes(fileExtension)) {
       extensionKey = key;
     }
   });
 
   if (extensionKey) {
-    fileExtensionsObj = {
+    fileExtensions = {
       [extensionKey]: [fileExtension],
     };
   } else {
-    displayParametrError();
+    displayError(errorType.parametr);
   }
 }
 
@@ -102,47 +65,60 @@ if (options.custom) {
   if (params.length === 2) {
     const groupName = params[0];
     const fileExtension = params[1];
-    fileExtensionsObj = {
+    fileExtensions = {
       [groupName]: fileExtension,
     };
   } else {
-    displayParametrError();
+    displayError(errorType.parametr);
   }
 }
 
+const getExtensionCategory = (fileExtension) => filesGroup.find(
+  (category) => fileExtensions[category].includes(fileExtension),
+);
+
+const createDirByFileExtension = (category) => {
+  if (!category) return undefined;
+  if (!fs.existsSync(`${initialPath}/${category}`)) {
+    return fs.mkdir(`${initialPath}/${category}`, (err) => err);
+  }
+};
+
+const moveFile = (file, fileExtension, onMoveCallback) => {
+  const category = getExtensionCategory(fileExtension);
+  if (!category) return undefined;
+
+  createDirByFileExtension(category);
+
+  if (!fs.existsSync(`${initialPath}/${category}/${file}`)) {
+    fse.moveSync(
+      `${initialPath}/${file}`,
+      `${initialPath}/${category}/${file}`,
+      (err) => displayError(errorType.onMove, err),
+    );
+    onMoveCallback();
+    return createMesssage(`Moving ${file} into ${category}/${file}`);
+  } if (fs.existsSync(`${initialPath}/${category}/${file}`)) {
+    return createMesssage(`${file} already exist in ${category} directory, skipping...`, messageType.warning);
+  }
+};
+
 const organizeFiles = () => {
+  let movedFiles = 0;
   fs.readdir(initialPath, (err, files) => {
     if (err) {
-      return console.log(`${chalk.red("Unable to scan directory: ")} ${err}`);
+      return displayError(errorType.readDir, err);
     }
-    let filesProcessed = 0;
-    let filesMoved = 0;
-    const countFiles = () => {
-      filesMoved += 1;
-    };
-    files.forEach((file) => {
-      createDirByFileExtension(file, getFileExtension(file), countFiles);
-      filesProcessed += 1;
-      if (filesProcessed === files.length) {
-        if (filesMoved === 0) {
-          return console.log(`${prefix} ${chalk.yellowBright.bold(
-            `No files found to be organized\n`,
-          )}`);
-        }
-        if (filesMoved !== 0) {
-          return console.log(`${prefix} ${chalk.green.bold(
-            `Organized ${filesMoved} files\n`,
-          )}`);
-        }
+    files.forEach((file, index) => {
+      moveFile(file, getFileExtension(file), () => { movedFiles += 1; });
+      if (!movedFiles && index === files.length - 1) {
+        return createMesssage(`No files found to be organized\n`, messageType.info);
       }
-      return undefined;
+      if (index === files.length - 1) {
+        return createMesssage(`Organized ${movedFiles} files\n`, messageType.success);
+      }
     });
-    return undefined;
   });
 };
 
-const startProgram = async () => {
-  if (!error) organizeFiles();
-};
-
-startProgram();
+organizeFiles();

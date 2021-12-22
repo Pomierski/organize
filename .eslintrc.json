@@ -12,6 +12,7 @@
     },
     "rules": {
         "linebreak-style": ["error", "windows"],
+        "consistent-return": 0,
         "quotes": 0
     }
 }
