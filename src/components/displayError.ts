@@ -19,7 +19,7 @@ export const displayError = (
     }
     case ErrorType.Parameter: {
       return createErrorMessage(
-        "Error, check if you entered parametr value correctly",
+        "Error, check if you entered parameter value correctly",
         err
       );
     }
