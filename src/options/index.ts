@@ -3,7 +3,8 @@ import { Command } from "commander";
 import { green, magentaBright } from "chalk";
 import { fileExtensions } from "../config/config.json";
 
-const pkg = JSON.parse(`${join("../../package.json")}`);
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pkg = require(`${join(__dirname, "../../package.json")}`);
 
 export const program = new Command();
 
