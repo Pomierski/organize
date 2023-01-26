@@ -1,44 +1,15 @@
-const path = require("path");
-const { Command } = require("commander");
-const chalk = require("chalk");
-const config = require("../config/config.json");
-
-// eslint-disable-next-line import/no-dynamic-require
-const pkg = require(`${path.join(__dirname, '../../package.json')}`);
-
-const program = new Command();
-
-program.version(pkg.version).description(
-  `${chalk.green("Organize")} your files \n${chalk.magentaBright(
-    "[Categories]",
-  )}: ${Object.keys(config.fileExtensions).join(", ")}
-      `,
-);
-program.option(
-  "-i, --ignore [category or categories]",
-  `Ignore files from one or many categories, e.g ${chalk.magentaBright.italic(
-    "organize -i 'videos'",
-  )} or ${chalk.magentaBright.italic("organize -i 'videos, movies, music'")}`,
-);
-program.option(
-  "-o, --only [files group]",
-  `Organize by only one category, e.g ${chalk.magentaBright.italic(
-    "organize -o 'videos'",
-  )}`,
-);
-program.option(
-  "-e, --extension [file extension]",
-  `Organize files with specified extension, e.g ${chalk.magentaBright.italic(
-    "organize -e 'webm'",
-  )}`,
-);
-program.option(
-  "-c, --custom [new category, file extension]",
-  `Organize files with extension which categories don't contain, e.g ${chalk.magentaBright.italic(
-    "organize -e 'Javascript, js'",
-  )}`,
-);
-
-program.parse(process.argv);
-
-module.exports = program;
+"use strict";
+exports.__esModule = true;
+exports.program = void 0;
+var path_1 = require("path");
+var commander_1 = require("commander");
+var chalk_1 = require("chalk");
+var config_json_1 = require("../config/config.json");
+var pkg = JSON.parse("".concat((0, path_1.join)("../../package.json")));
+exports.program = new commander_1.Command();
+exports.program.version(pkg.version).description("".concat((0, chalk_1.green)("Organize"), " your files \n").concat((0, chalk_1.magentaBright)("[Categories]"), ": ").concat(Object.keys(config_json_1.fileExtensions).join(", "), "\n      "));
+exports.program.option("-i, --ignore [category or categories]", "Ignore files from one or many categories, e.g ".concat(chalk_1.magentaBright.italic("organize -i 'videos'"), " or ").concat(chalk_1.magentaBright.italic("organize -i 'videos, movies, music'")));
+exports.program.option("-o, --only [files group]", "Organize by only one category, e.g ".concat(chalk_1.magentaBright.italic("organize -o 'videos'")));
+exports.program.option("-e, --extension [file extension]", "Organize files with specified extension, e.g ".concat(chalk_1.magentaBright.italic("organize -e 'webm'")));
+exports.program.option("-c, --custom [new category, file extension]", "Organize files with extension which categories don't contain, e.g ".concat(chalk_1.magentaBright.italic("organize -e 'Javascript, js'")));
+exports.program.parse(process.argv);
