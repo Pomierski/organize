@@ -80,7 +80,6 @@ const getExtensionCategory = (fileExtension: string): string | undefined =>
   );
 
 const createDirByFileExtension = (category: string): void => {
-  if (!category) return undefined;
   if (!existsSync(`${initialPath}/${category}`)) {
     return mkdir(`${initialPath}/${category}`, (err) => err);
   }
