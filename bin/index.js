@@ -51,9 +51,7 @@ if (options.extension) {
     var fileExtension_1 = options.extension.toLowerCase();
     var extensionKey_1;
     filesGroup.forEach(function (key) {
-        var _a;
-        if ((_a = Object.keys(fileExtension_1)
-            .find(function (k) { return k === key; })) === null || _a === void 0 ? void 0 : _a.includes(fileExtension_1)) {
+        if (fileExtension_1[key].includes(fileExtension_1)) {
             extensionKey_1 = key;
         }
     });
@@ -99,12 +97,12 @@ var moveFile = function (file, fileExtension, onMoveCallback) {
     if (!(0, fs_1.existsSync)("".concat(initialPath, "/").concat(category, "/").concat(file))) {
         try {
             (0, fs_extra_1.moveSync)("".concat(initialPath, "/").concat(file), "".concat(initialPath, "/").concat(category, "/").concat(file));
-            onMoveCallback();
-            return (0, message_1.createMesssage)("Moving ".concat(file, " into ").concat(category, "/").concat(file), message_1.MessageType.Casual);
         }
         catch (err) {
             (0, displayError_1.displayError)(displayError_1.ErrorType.OnMove, err);
         }
+        onMoveCallback();
+        return (0, message_1.createMesssage)("Moving ".concat(file, " into ").concat(category, "/").concat(file), message_1.MessageType.Casual);
     }
     if ((0, fs_1.existsSync)("".concat(initialPath, "/").concat(category, "/").concat(file))) {
         return (0, message_1.createMesssage)("".concat(file, " already exist in ").concat(category, " directory, skipping..."), message_1.MessageType.Warning);

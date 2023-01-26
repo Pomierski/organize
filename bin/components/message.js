@@ -27,6 +27,7 @@ var createMesssage = function (message, type) {
         case MessageType.Warning: {
             return console.log("".concat(prefix, " ").concat((0, chalk_1.red)(message)));
         }
+        case MessageType.Casual:
         default: {
             return console.log("".concat(prefix, " ").concat((0, chalk_1.grey)(message)));
         }

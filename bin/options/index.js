@@ -5,7 +5,8 @@ var path_1 = require("path");
 var commander_1 = require("commander");
 var chalk_1 = require("chalk");
 var config_json_1 = require("../config/config.json");
-var pkg = JSON.parse("".concat((0, path_1.join)("../../package.json")));
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+var pkg = require("".concat((0, path_1.join)(__dirname, "../../package.json")));
 exports.program = new commander_1.Command();
 exports.program.version(pkg.version).description("".concat((0, chalk_1.green)("Organize"), " your files \n").concat((0, chalk_1.magentaBright)("[Categories]"), ": ").concat(Object.keys(config_json_1.fileExtensions).join(", "), "\n      "));
 exports.program.option("-i, --ignore [category or categories]", "Ignore files from one or many categories, e.g ".concat(chalk_1.magentaBright.italic("organize -i 'videos'"), " or ").concat(chalk_1.magentaBright.italic("organize -i 'videos, movies, music'")));
