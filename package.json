@@ -2,23 +2,38 @@
   "name": "organize",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "source": "./src/index.ts",
   "bin": {
     "organize": "./bin/index.js"
   },
+  "targets": {
+    "default": {
+      "distDir": "./bin/"
+    }
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "parcel build",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "chalk": "^4.1.0",
-    "commander": "^7.2.0",
-    "fs-extra": "^9.1.0"
+    "chalk": "4.1.0",
+    "commander": "7.2.0",
+    "fs-extra": "9.1.0"
   },
   "devDependencies": {
-    "eslint": "^8.5.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.3"
+    "@types/fs-extra": "11.0.1",
+    "@types/node": "18.11.18",
+    "@typescript-eslint/eslint-plugin": "5.49.0",
+    "@typescript-eslint/parser": "5.49.0",
+    "eslint": "8.32.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-plugin-import": "2.27.5",
+    "parcel": "2.8.3",
+    "typescript": "4.9.4"
+  },
+  "engines": {
+    "node": ">=14"
   }
 }
