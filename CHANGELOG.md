@@ -1,4 +1,4 @@
-# 2.0.0 (2023-)
+# 2.0.0 (2023-02-19)
 
 ### Features and enhancements
 - (Major) Refactor [@Pomierski](https://github.com/Pomierski)
