@@ -5,7 +5,7 @@ Organize moves files into created directories, which are named according to the 
 ![enter image description here](https://i.imgur.com/K4ZSKAy.gif)
 
 ## How to use
-- `npm install -g git+https://github.com/Pomierski/organize.git`
+- `npm install -g organize-js`
 - `organize`
 
 ## Categories

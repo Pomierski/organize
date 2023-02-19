@@ -1,3 +1,8 @@
+# 2.0.1 (2023-02-19)
+
+### Hotfixes
+- (Patch) Fix `custom` option description, update docs.
+
 # 2.0.0 (2023-02-19)
 
 ### Features and enhancements
