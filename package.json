@@ -12,6 +12,7 @@
     }
   },
   "scripts": {
+    "start": "ts-node ./src/index.ts",
     "build": "parcel build",
     "lint": "eslint ."
   },
@@ -23,6 +24,7 @@
     "fs-extra": "9.1.0"
   },
   "devDependencies": {
+    "ts-node": "latest",
     "@types/fs-extra": "11.0.1",
     "@types/node": "18.11.18",
     "@typescript-eslint/eslint-plugin": "5.49.0",

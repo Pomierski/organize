@@ -2,7 +2,7 @@
   "initialPath": "./",
   "prefix": "\n[Organize]:",
   "fileExtensions": {
-    "Images": [
+    "images": [
       "jpg",
       "jpeg",
       "png",
@@ -29,8 +29,8 @@
       "gif",
       "webp"
     ],
-    "Icons": ["svg", "svgz", "ico"],
-    "Documents": [
+    "icons": ["svg", "svgz", "ico"],
+    "documents": [
       "txt",
       "pdf",
       "doc",
@@ -63,7 +63,7 @@
       "sti",
       "sxi"
     ],
-    "Music": [
+    "music": [
       "mp3",
       "wav",
       "m4a",
@@ -76,8 +76,8 @@
       "opus",
       "3gp"
     ],
-    "Videos": ["webm", "ogv", "gifv", "rm", "amv", "mpeg", "mp4", "mov"],
-    "Movies": ["vob", "drc", "rmvb", "mkv", "flv", "wmv", "amv", "avi"],
-    "Archives": ["zip", "rar", "7z", "bz2", "gz", "tar"]
+    "videos": ["webm", "ogv", "gifv", "rm", "amv", "mpeg", "mp4", "mov"],
+    "movies": ["vob", "drc", "rmvb", "mkv", "flv", "wmv", "amv", "avi"],
+    "archives": ["zip", "rar", "7z", "bz2", "gz", "tar"]
   }
 }

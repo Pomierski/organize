@@ -1,4 +1,4 @@
-import { red, green, yellowBright, grey } from "chalk";
+import { green, red, yellowBright } from "chalk";
 import config from "../config/config.json";
 
 const { prefix } = config;
@@ -15,7 +15,7 @@ export const createErrorMessage = (
   err?: NodeJS.ErrnoException | null | unknown
 ): void => console.log(red.bgBlack.bold(`${message} ${err && `: ${err}`}`));
 
-export const createMesssage = (message: string, type: MessageType): void => {
+export const displayMesssage = (message: string, type: MessageType): void => {
   switch (type) {
     case MessageType.Success: {
       return console.log(`${prefix} ${green.bold(message)}`);
@@ -28,7 +28,7 @@ export const createMesssage = (message: string, type: MessageType): void => {
     }
     case MessageType.Casual:
     default: {
-      return console.log(`${prefix} ${grey(message)}`);
+      return console.log(message);
     }
   }
 };
