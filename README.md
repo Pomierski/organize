@@ -5,7 +5,7 @@ Organize moves files into created directories, which are named according to the 
 ![enter image description here](https://i.imgur.com/K4ZSKAy.gif)
 
 ## How to use
-- `npm install -g git+https://github.com/Pomierski/organize.git`
+- `npm install -g organize-node`
 - `organize`
 
 ## Categories
@@ -20,7 +20,7 @@ Organize moves files into created directories, which are named according to the 
 
 ## Options
 
-- `-i, --ignore [category or categories]` - Ignore files from one or many categories e.g `organize -i 'videos'` or `organize -i 'videos, movies, music'`
-- `-o, --only [category]` - Organize files by only one category, e.g `organize -o 'videos'` will organize only files which belong to the category
-- `-e, --extension [file extension]` - Organize files with specified extension, e.g `organize -e 'webm'`
-- `-c, --custom [new category, file extension]` - Organize files with extension not included in categories, e.g `organize -e 'Javascript, js'`
+- `-i, --ignore [category or categories]` - Ignore files from one or many categories e.g `organize -i "videos"` or `organize -i "videos, movies, music"`
+- `-o, --only [category]` - Organize files by only one category, e.g `organize -o "videos"` will organize only files which belong to the category
+- `-e, --extension [file extension]` - Organize files with specified extension, e.g `organize -e "webm"`
+- `-c, --custom [new category, file extension]` - Organize files with extension not included in categories, e.g `organize -c "Javascript, js"`
