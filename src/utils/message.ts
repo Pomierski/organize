@@ -1,4 +1,4 @@
-import { green, red, yellowBright } from "chalk";
+import { green, grey, red, yellowBright } from "chalk";
 import config from "../config/config.json";
 
 const { prefix } = config;
@@ -28,7 +28,7 @@ export const displayMesssage = (message: string, type: MessageType): void => {
     }
     case MessageType.Casual:
     default: {
-      return console.log(message);
+      return console.log(`${prefix} ${grey(message)}`);
     }
   }
 };
