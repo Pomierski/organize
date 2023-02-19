@@ -1,6 +1,6 @@
-import { join } from "path";
-import { Command } from "commander";
 import { green, magentaBright } from "chalk";
+import { Command } from "commander";
+import { join } from "path";
 import { fileExtensions } from "../config/config.json";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -35,7 +35,7 @@ program.option(
 program.option(
   "-c, --custom [new category, file extension]",
   `Organize files with extension which categories don't contain, e.g ${magentaBright.italic(
-    "organize -e 'Javascript, js'"
+    "organize -c 'Javascript, js'"
   )}`
 );
 
