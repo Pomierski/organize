@@ -42,4 +42,4 @@ if (options.custom) {
   }
 }
 
-// organizeFiles(defaultFileGroups, defaultFileExtensions);
+organizeFiles(defaultFileGroups, defaultFileExtensions);
